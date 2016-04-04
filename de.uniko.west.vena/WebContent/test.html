@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+var MDL_NODETYPE_PERSON = "person",
+MDL_NODETYPE_FAMILY = "family";
+
+//------- VNode --------
+function VNode() {
+this.id =			mdlCreateVenaID();
+this.type =			"";
+this.posx = 		-1;
+this.posy =			-1;
+}
+
+VNode.prototype.connected = function(){
+return[];
+}
+
+
+//------- VPerson --------
+function VPerson(){
+VNode.call(this);
+this.type = MDL_NODETYPE_PERSON;
+this.name = "";
+this.info = "";
+this.gender = "";
+this.pFamilies = [];
+this.cFamilies = [];
+this.friends = [];
+}
+VPerson.prototype = new VNode;
+VPerson.prototype.connected = function(){
+var result = [];
+result = result.concat(this.pFamilies, this.cFamilies, this.friends);
+result = result.filter(function(n){ return n != undefined });
+return result;
+}
+
+//------- VFamily --------
+function VFamily(){
+VNode.call(this);
+this.type = MDL_NODETYPE_FAMILY;
+this.mother = null;
+this.father = null;
+this.children = [];
+}
+VFamily.prototype = new VNode;
+VFamily.prototype.connected = function(){
+var result = [];
+result = result.concat([this.mother],[this.father],this.children);
+result = result.filter(function(n){ return n != undefined });
+return result;
+}
+
+
+
+var f1 = new VFamily();
+
+var p1 = new VPerson();
+p1.id = "p123";
+p1.name = "klaus";
+
+f1.father = p1.id;
+p1.cFamilies.push(f1.id);
+
+var liste = [p1,f1];
+
+for (var i = 0; i < liste.length; i++) {
+	console.log(liste[i].id);
+	console.log(liste[i].name);
+	console.log(liste[i].connected());
+}
+
+console.log(JSON.stringify(p1));
+console.log(JSON.stringify(f1));
+
+console.log( 0 ? true : false);
+console.log( 1 ? true : false);
+console.log( -1 ? true : false);
+
+
+function mdlCreateVenaID(){
+	return "123";
+}
+</script>
+</head>
+<body>
+
+</body>
+</html>
